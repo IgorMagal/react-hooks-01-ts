@@ -12,7 +12,7 @@ const Search: React.FC<{
 
   useEffect(() => {
     const filteredList = props.ingredientsList.filter((e) =>
-      e.name.match(filteredText)
+      e.name.toLowerCase().match(filteredText.toLowerCase())
     );
 
     props.onFilterChange(filteredList);
