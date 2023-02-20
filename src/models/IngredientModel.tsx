@@ -1,5 +1,5 @@
 interface Iingredient {
-  id: string;
+  id?: string;
   name: string;
   amount: number;
 }

@@ -12,19 +12,19 @@
 .error-modal h2 {
   margin: 0;
   padding: 1rem;
-  background: #ff2058;
+  background: #000000;
   color: white;
   border-radius: 7px 7px 0 0;
 }
 
 .error-modal p {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 .error-modal__actions {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 0.5rem;
 }
 
 .backdrop {

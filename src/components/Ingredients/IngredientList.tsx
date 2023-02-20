@@ -3,7 +3,7 @@ import "./IngredientList.css";
 import Iingredient from "../../models/IngredientModel";
 
 const IngredientList: React.FC<{
-  onRemoveItem: () => void;
+  onRemoveItem: (id: string) => void;
   ingredients: Iingredient[];
 }> = (props) => {
   return (
@@ -11,7 +11,7 @@ const IngredientList: React.FC<{
       <h2>Loaded Ingredients</h2>
       <ul>
         {props.ingredients.map((ig) => (
-          <li key={ig.id} onClick={props.onRemoveItem.bind(this, ig.id)}>
+          <li key={ig.id} onClick={props.onRemoveItem.bind(this, ig.id!)}>
             <span>{ig.name}</span>
             <span>{ig.amount}x</span>
           </li>

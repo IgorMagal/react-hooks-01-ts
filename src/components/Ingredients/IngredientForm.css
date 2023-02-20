@@ -18,6 +18,15 @@
   margin-bottom: 1rem;
 }
 
+.form-control label {
+  font-weight: normal;
+  transition: font-weight 0.3s ease;
+}
+
+.form-control input:focus + label {
+  font-weight: bold;
+}
+
 .form-control input:focus {
   outline: none;
   border-bottom-color: black;
