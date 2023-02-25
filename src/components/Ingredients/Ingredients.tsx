@@ -16,7 +16,7 @@ type Action =
   | { type: "ADD_INGREDIENT"; payload: Iingredient }
   | { type: "REMOVE_INGREDIENT"; payload: string }
   | { type: "SET_LOADING"; payload: boolean }
-  | { type: "SET_ERROR"; payload: string };
+  | { type: "SET_ERROR"; payload: null | string };
 
 const ingredientReducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -107,7 +107,7 @@ function Ingredients() {
   );
 
   const clearError = () => {
-    dispatch({ type: "SET_ERROR", payload: "" });
+    dispatch({ type: "SET_ERROR", payload: null });
   };
 
   const filterLoadingStateHandler = useCallback((state: boolean) => {
