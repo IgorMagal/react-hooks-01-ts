@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Card from "../UI/Card";
 import "./IngredientForm.css";
 import Iingredient from "../../models/IngredientModel";
+import LoadingIndicator from "../UI/LoadingIndicator";
 
 type InputState = {
   name: string;
@@ -11,17 +12,19 @@ type InputState = {
 
 const IngredientForm: React.FC<{
   onAddIngredient: (newIngredient: Iingredient) => void;
+  onLoading: boolean;
 }> = React.memo((props) => {
   const [inputState, setInputState] = useState<InputState>({
     name: "",
     amount: 0,
   });
+  const { onAddIngredient, onLoading } = props;
 
   const submitHandler: React.FormEventHandler = (event) => {
     event.preventDefault();
 
     if (inputState.name !== "" && inputState.amount !== 0) {
-      props.onAddIngredient({
+      onAddIngredient({
         name: inputState.name,
         amount: inputState.amount,
       });
@@ -70,7 +73,10 @@ const IngredientForm: React.FC<{
             />
           </div>
           <div className="ingredient-form__actions">
-            <button type="submit">Add Ingredient</button>
+            <button type="submit" disabled={onLoading}>
+              Add Ingredient
+            </button>
+            {onLoading && <LoadingIndicator />}
           </div>
         </form>
       </Card>

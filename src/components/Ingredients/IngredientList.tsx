@@ -8,10 +8,12 @@ const IngredientList: React.FC<{
 }> = (props) => {
   return (
     <section className="ingredient-list">
-      <h2>Loaded Ingredients</h2>
       <ul>
         {props.ingredients.map((ig) => (
-          <li key={ig.id} onClick={props.onRemoveItem.bind(this, ig.id!)}>
+          <li
+            key={ig.id ? ig.id : new Date().toISOString()}
+            onClick={props.onRemoveItem.bind(this, ig.id!)}
+          >
             <span>{ig.name}</span>
             <span>{ig.amount}x</span>
           </li>
