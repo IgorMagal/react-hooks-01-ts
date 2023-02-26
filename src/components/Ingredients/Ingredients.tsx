@@ -4,19 +4,16 @@ import Search from "./Search";
 import Iingredient from "../../models/IngredientModel";
 import IngredientList from "./IngredientList";
 import ErrorModal from "../UI/ErrorModal";
+import useHttpFetch from "../../hooks/useHttpFetch";
 
 type State = {
   ingredients: Iingredient[];
-  isLoading: boolean;
-  error: null | string;
 };
 
 type Action =
   | { type: "SET_INGREDIENTS"; payload: Iingredient[] }
   | { type: "ADD_INGREDIENT"; payload: Iingredient }
-  | { type: "REMOVE_INGREDIENT"; payload: string }
-  | { type: "SET_LOADING"; payload: boolean }
-  | { type: "SET_ERROR"; payload: null | string };
+  | { type: "REMOVE_INGREDIENT"; payload: string };
 
 const ingredientReducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -37,18 +34,6 @@ const ingredientReducer = (state: State, action: Action) => {
           (ingredient) => ingredient.id !== action.payload
         ),
       };
-
-    case "SET_LOADING":
-      return {
-        ...state,
-        isLoading: action.payload,
-      };
-
-    case "SET_ERROR":
-      return {
-        ...state,
-        error: action.payload,
-      };
     default:
       throw new Error("Invalid action");
   }
@@ -57,51 +42,40 @@ const ingredientReducer = (state: State, action: Action) => {
 function Ingredients() {
   const [state, dispatch] = useReducer(ingredientReducer, {
     ingredients: [],
-    isLoading: false,
-    error: null,
   });
-
-  //const [ingredients, setIngredients] = useState<Iingredient[]>([]);
-  //const [isLoading, setIsLoading] = useState<boolean>(false);
-  //const [error, setError] = useState<string | null>(null);
+  const { error, isLoading, sendReq, clearError } = useHttpFetch();
 
   useEffect(() => {
     console.log("Fetching ingredients...", state.ingredients);
   }, [state.ingredients]);
 
-  const addIngredientHandler = useCallback((newIngredient: Iingredient) => {
-    dispatch({ type: "SET_LOADING", payload: true });
-    fetch(
-      "https://react-http-reqs-f9475-default-rtdb.firebaseio.com/ingredients.json",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newIngredient),
-      }
-    )
-      .then((resp) => resp.json())
-      .then((respData) =>
-        dispatch({ type: "ADD_INGREDIENT", payload: newIngredient })
+  const addIngredientHandler = useCallback(
+    (newIngredient: Iingredient) => {
+      sendReq(
+        "POST",
+        JSON.stringify(newIngredient),
+        "https://react-http-reqs-f9475-default-rtdb.firebaseio.com/ingredients.jon"
       )
-      .then((e) => dispatch({ type: "SET_LOADING", payload: false }));
-  }, []);
+        .then((r) =>
+          dispatch({ type: "ADD_INGREDIENT", payload: newIngredient })
+        )
+        .catch((e) => console.log(e));
+    },
+    [sendReq]
+  );
 
-  const removeIngredientHandler = useCallback((id: string) => {
-    dispatch({ type: "SET_LOADING", payload: true });
-    fetch(
-      `https://react-http-reqs-f9475-default-rtdb.firebaseio.com/ingredients/${id}.json`,
-      {
-        method: "DELETE",
-      }
-    )
-      .then((r) => dispatch({ type: "REMOVE_INGREDIENT", payload: id }))
-      .then(() => dispatch({ type: "SET_LOADING", payload: false }))
-      .catch((e) => {
-        dispatch({ type: "SET_ERROR", payload: e.message });
-      });
-  }, []);
+  const removeIngredientHandler = useCallback(
+    (id: string) => {
+      sendReq(
+        "DELETE",
+        null,
+        `https://react-http-reqs-f9475-default-rtdb.firebaseio.com/ingredients/${id}.json`
+      )
+        .then((r) => dispatch({ type: "REMOVE_INGREDIENT", payload: id }))
+        .catch((e) => console.log(e));
+    },
+    [sendReq]
+  );
 
   const filterIngredientHandler = useCallback(
     (filteredIngredients: Iingredient[]) => {
@@ -110,12 +84,8 @@ function Ingredients() {
     []
   );
 
-  const clearError = useCallback(() => {
-    dispatch({ type: "SET_ERROR", payload: null });
-  }, []);
-
   const filterLoadingStateHandler = useCallback((state: boolean) => {
-    dispatch({ type: "SET_LOADING", payload: state });
+    // dispatch({ type: "SET_LOADING", payload: state });
   }, []);
 
   const ingredientsList = useMemo(() => {
@@ -129,19 +99,17 @@ function Ingredients() {
 
   return (
     <div className="App">
-      {state.error && (
-        <ErrorModal onClose={() => clearError()}>{state.error}</ErrorModal>
-      )}
+      {error && <ErrorModal onClose={() => clearError()}>{error}</ErrorModal>}
       <IngredientForm
         onAddIngredient={addIngredientHandler}
-        onLoading={state.isLoading}
+        onLoading={isLoading}
       />
       <section>
         <Search
           onFilterIngredients={filterIngredientHandler}
           setLoadingstate={filterLoadingStateHandler}
         />
-        {state.isLoading ? <p>Fetching ingredients...</p> : ingredientsList}
+        {isLoading ? <p>Fetching ingredients...</p> : ingredientsList}
       </section>
     </div>
   );

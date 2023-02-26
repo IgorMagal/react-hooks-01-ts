@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import Card from "../UI/Card";
 import "./IngredientForm.css";
 import Iingredient from "../../models/IngredientModel";
@@ -19,7 +18,7 @@ const IngredientForm: React.FC<{
     amount: 0,
   });
   const { onAddIngredient, onLoading } = props;
-  console.log("Rendering ingredients from IngredientsForm");
+  //console.log("Rendering ingredients from IngredientsForm");
   const submitHandler: React.FormEventHandler = (event) => {
     event.preventDefault();
 
