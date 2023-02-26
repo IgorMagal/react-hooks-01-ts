@@ -54,7 +54,7 @@ function Ingredients() {
       sendReq(
         "POST",
         JSON.stringify(newIngredient),
-        "https://react-http-reqs-f9475-default-rtdb.firebaseio.com/ingredients.jon"
+        "https://react-http-reqs-f9475-default-rtdb.firebaseio.com/ingredients.json"
       )
         .then((r) =>
           dispatch({ type: "ADD_INGREDIENT", payload: newIngredient })
