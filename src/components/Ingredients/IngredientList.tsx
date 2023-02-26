@@ -6,6 +6,7 @@ const IngredientList: React.FC<{
   onRemoveItem: (id: string) => void;
   ingredients: Iingredient[];
 }> = (props) => {
+  console.log("Rendering IngredientsList.");
   return (
     <section className="ingredient-list">
       <ul>

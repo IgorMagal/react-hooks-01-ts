@@ -19,7 +19,7 @@ const IngredientForm: React.FC<{
     amount: 0,
   });
   const { onAddIngredient, onLoading } = props;
-
+  console.log("Rendering ingredients from IngredientsForm");
   const submitHandler: React.FormEventHandler = (event) => {
     event.preventDefault();
 
